@@ -12,10 +12,10 @@ fn main() {
             .read_line(&mut option)
             .expect("Failed to read line");
 
-        let option: usize = option
-            .trim()
-            .parse()
-            .expect("Option should be an unsigned integer value.");
+        let option: usize = match option.trim().parse() {
+            Ok(value) => value,
+            Err(_) => continue,
+        };
 
         if option == 1 {
             println!("Type the Fahreinheit temperature to be converted.");
@@ -44,14 +44,21 @@ fn main() {
 fn wait_for_float_from_input() -> f64 {
     let mut input: String = String::new();
 
-    io::stdin()
-        .read_line(&mut input)
-        .expect("Failed to read line");
+    loop {
+        io::stdin()
+            .read_line(&mut input)
+            .expect("Failed to read line");
 
-    input
-        .trim()
-        .parse()
-        .expect("Option should be a float value")
+        let input: f64 = match input.trim().parse() {
+            Ok(num) => num,
+            Err(_) => {
+                println!("The input should be a float. Try again:");
+                continue;
+            }
+        };
+
+        break input;
+    }
 }
 
 fn convert_fahrenheit_to_celsius(temp: f64) -> f64 {
