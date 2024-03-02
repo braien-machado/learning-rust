@@ -1,22 +1,30 @@
 use std::io;
 
 fn main() {
-    println!("Type the nth position of the Fibonacci sequence you want. (Positions beyond 93th will cause overflow)");
+    loop {
+        println!("Type the nth position of the Fibonacci sequence you want:");
 
-    let mut index: String = String::new();
+        let mut index: String = String::new();
 
-    io::stdin()
-        .read_line(&mut index)
-        .expect("Failed to read line");
+        io::stdin()
+            .read_line(&mut index)
+            .expect("Failed to read line");
 
-    let index: usize = index
-        .trim()
-        .parse()
-        .expect("Position should be an unsigned integer value.");
+        let index: usize = match index.trim().parse() {
+            Ok(value) => value,
+            Err(_) => continue,
+        };
 
-    let number = get_nth_fibonacci_value(index);
+        if index > 93 {
+            println!("Position will likely cause overflow.");
+            continue;
+        }
 
-    println!("The Fibonacci number in position {index} is {number}.")
+        let number: usize = get_nth_fibonacci_value(index);
+
+        println!("The Fibonacci number in position {index} is {number}.");
+        break;
+    }
 }
 
 fn get_nth_fibonacci_value(index: usize) -> usize {
@@ -33,7 +41,7 @@ fn get_nth_fibonacci_value(index: usize) -> usize {
     let mut current_index: usize = 2;
 
     while current_index <= index {
-        let new_number = last_number + current_number;
+        let new_number: usize = last_number + current_number;
 
         last_number = current_number;
         current_number = new_number;
